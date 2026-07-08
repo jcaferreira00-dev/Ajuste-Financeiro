@@ -201,6 +201,15 @@ header {
 .cardTitulo h2 {
   font-size: 16px;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.card-icon {
+  font-size: 19px;
+  color: var(--verde-menta);
+  flex-shrink: 0;
 }
 
 .totalCard {
@@ -398,36 +407,42 @@ li.pago {
 }
 
 /* =====================================================
-   FECHAR MÊS
+   FECHAR MÊS — botão redondo flutuante, sobreposto
+   entre o card Resumo e o card Histórico
 ===================================================== */
-.fecharMesCard {
-  text-align: center;
-  border: 1.5px solid rgba(255, 205, 30, .4);
+.fecharMesFabWrap {
+  position: relative;
+  height: 0;
+  margin: -8px 0;
+  display: flex;
+  justify-content: center;
+  z-index: 6;
+  pointer-events: none;
 }
 
 .btnFecharMes {
-  width: 100%;
-  padding: 16px;
-  font-size: 16px;
-  font-weight: 700;
-  border: 2.5px solid var(--amarelo-copa);
-  border-radius: var(--raio-pequeno);
-  background: var(--verde-musgo);
+  pointer-events: auto;
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  border: 2.5px solid var(--azul-petroleo);
+  background: linear-gradient(160deg, var(--verde) 0%, var(--verde-escuro) 100%);
   color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
-  box-shadow: 0 4px 14px rgba(255, 205, 30, .22);
-  transition: .15s;
+  box-shadow: 0 6px 18px rgba(13, 74, 36, .38), 0 2px 5px rgba(0, 0, 0, .18);
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+
+.btnFecharMes .material-symbols-outlined {
+  font-size: 26px;
 }
 
 .btnFecharMes:active {
-  background: var(--verde-musgo-escuro);
-  transform: scale(.98);
-}
-
-.dicaFechar {
-  margin-top: 10px;
-  font-size: 12.5px;
-  color: var(--texto-suave);
+  transform: scale(.90);
+  box-shadow: 0 3px 10px rgba(13, 74, 36, .35);
 }
 
 /* =====================================================
@@ -831,7 +846,7 @@ html[data-tema="escuro"] .historicoSaldo strong {
   .vale           { grid-area: vale; }
   .pagamento      { grid-area: pagamento; }
   .resumo         { grid-area: resumo; }
-  .fecharMesCard  { grid-area: fechar; display: flex; flex-direction: column; justify-content: center; }
+  .fecharMesFabWrap { grid-area: fechar; height: auto; margin: 0; display: flex; align-items: center; justify-content: center; pointer-events: auto; }
   .historicoSection   { grid-area: historico; }
   .holeriteSection { grid-area: ferramentas; }
 

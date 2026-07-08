@@ -134,7 +134,7 @@
     <!-- RECEITAS -->
     <section class="card receitas" data-secao="receitas">
       <div class="cardTitulo">
-        <h2>💰 Receitas</h2>
+        <h2><span class="material-symbols-outlined card-icon">payments</span>Receitas</h2>
         <span class="totalCard" id="resReceitas">R$ 0,00</span>
         <button class="btnRecolher" id="btnRecolher_receitas" onclick="toggleSecao('receitas')" aria-label="Recolher receitas">🔽</button>
       </div>
@@ -152,7 +152,7 @@
     <!-- VALE -->
     <section class="card vale despesas" data-secao="vale">
       <div class="cardTitulo">
-        <h2>🎫 Vale</h2>
+        <h2><span class="material-symbols-outlined card-icon">receipt_long</span>Vale</h2>
         <span class="totalCard" id="resVale">R$ 0,00</span>
         <button class="btnRecolher" id="btnRecolher_vale" onclick="toggleSecao('vale')" aria-label="Recolher vale">🔽</button>
       </div>
@@ -170,7 +170,7 @@
     <!-- PAGAMENTO -->
     <section class="card pagamento despesas" data-secao="pagamento">
       <div class="cardTitulo">
-        <h2>🏦 Pagamento</h2>
+        <h2><span class="material-symbols-outlined card-icon">account_balance</span>Pagamento</h2>
         <span class="totalCard" id="resPagamento">R$ 0,00</span>
         <button class="btnRecolher" id="btnRecolher_pagamento" onclick="toggleSecao('pagamento')" aria-label="Recolher pagamento">🔽</button>
       </div>
@@ -188,30 +188,30 @@
     <!-- RESUMO -->
     <section class="card resumo" data-secao="resumo">
       <div class="cardTitulo">
-        <h2>📊 Resumo do mês</h2>
+        <h2><span class="material-symbols-outlined card-icon">bar_chart</span>Resumo do mês</h2>
         <button class="btnRecolher" id="btnRecolher_resumo" onclick="toggleSecao('resumo')" aria-label="Recolher resumo">🔽</button>
       </div>
 
       <p><span><i class="dot dotReceita"></i>Receitas</span><span id="resumoReceitas">R$ 0,00</span></p>
       <p><span><i class="dot dotVale"></i>Vale</span><span id="resumoVale">R$ 0,00</span></p>
       <p><span><i class="dot dotPagamento"></i>Pagamentos</span><span id="resumoPagamento">R$ 0,00</span></p>
-      <p><span><i class="dot dotIR"></i>IR do mês (Holerite)</span><span id="resumoIR">R$ 0,00</span></p>
 
       <div class="linhaDivisoria"></div>
 
       <p class="saldoFinal"><span>Saldo</span><span id="saldoResumo">R$ 0,00</span></p>
     </section>
 
-    <!-- FECHAR MÊS -->
-    <section class="card fecharMesCard">
-      <button class="btnFecharMes" onclick="fecharMes()">Fechar mês e avançar ➜</button>
-      <p class="dicaFechar">Confere se deu pra pagar tudo e já prepara o próximo mês.</p>
-    </section>
+    <!-- FECHAR MÊS (flutuante, sobreposto entre Resumo e Histórico) -->
+    <div class="fecharMesFabWrap">
+      <button class="btnFecharMes" onclick="fecharMes()" aria-label="Fechar mês e avançar" title="Fechar mês e avançar">
+        <span class="material-symbols-outlined">arrow_forward</span>
+      </button>
+    </div>
 
     <!-- HISTÓRICO -->
     <section class="card historicoSection" data-secao="historico">
       <div class="cardTitulo">
-        <h2>🗂️ Histórico</h2>
+        <h2><span class="material-symbols-outlined card-icon">history</span>Histórico</h2>
         <button class="btnRecolher" id="btnRecolher_historico" onclick="toggleSecao('historico')" aria-label="Recolher histórico">🔽</button>
       </div>
 
@@ -222,7 +222,7 @@
     <!-- HOLERITE -->
     <section class="card holeriteSection" data-secao="holerite">
       <div class="cardTitulo">
-        <h2>🧾 Holerite</h2>
+        <h2><span class="material-symbols-outlined card-icon">request_quote</span>Holerite</h2>
         <span class="totalCard" id="holLiquidoResumo">R$ 0,00</span>
         <button class="btnRecolher" id="btnRecolher_holerite" onclick="toggleSecao('holerite')" aria-label="Recolher holerite">🔽</button>
       </div>
@@ -257,7 +257,7 @@
             <span class="card-row-value" id="decimoTerceiroTotal">R$ 0,00</span>
           </div>
           <div class="card-row">
-            <span>IR acumulado no ano</span>
+            <span>Base IR acumulada no ano</span>
             <span class="card-row-value" id="holIRAcumulado">R$ 0,00</span>
           </div>
         </div>

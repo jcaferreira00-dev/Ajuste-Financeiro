@@ -2,8 +2,8 @@
    HOLERITE — módulo embutido no Controle Financeiro
    Mesma lógica do app standalone, adaptada para:
    - não ter tema próprio (segue o tema do Controle Financeiro)
-   - expor getIRAtual()/setIRAcumuladoAnterior() para o resumo
-     do mês e o fechamento anual
+   - expor getBaseIRAtual()/setBaseIRAcumuladaAnterior() para o
+     fechamento anual (acumula a Base IR "bruta", não o imposto pago)
    ========================================================= */
 (function () {
   "use strict";
@@ -89,8 +89,8 @@
      CÁLCULO PRINCIPAL
      ========================================================= */
   let ultimoCalculo = null;   // totais do último cálculo (pra permitir editar a Base IR sem reabrir o modal)
-  let irAcumuladoAnterior = 0; // IR já acumulado nos meses fechados deste ano (vem do Controle Financeiro)
-  let irrfAtual = 0;          // IRRF do mês corrente, já considerando eventual edição manual da Base IR
+  let baseIRAcumuladaAnterior = 0; // Base IR já acumulada nos meses fechados deste ano (vem do Controle Financeiro)
+  let baseIRAtual = 0;             // Base IR do mês corrente, já considerando eventual edição manual
 
   function calcular() {
     const salarioBase        = num('salarioBase');
@@ -169,10 +169,12 @@
   // Recalcula IRRF/Descontos/Líquido a partir de uma Base IR (automática ou editada manualmente)
   function aplicarBaseIR(baseIR) {
     if (!ultimoCalculo) return;
-    const faixa = IRRF_TABLE.find(f => baseIR >= f.min && baseIR <= f.max) || IRRF_TABLE[IRRF_TABLE.length - 1];
-    irrfAtual = Math.max(0, baseIR * (faixa.pct / 100) - faixa.ded);
+    baseIRAtual = baseIR;
 
-    const totalDescontos = ultimoCalculo.outrosDescontosSemIRRF + irrfAtual;
+    const faixa = IRRF_TABLE.find(f => baseIR >= f.min && baseIR <= f.max) || IRRF_TABLE[IRRF_TABLE.length - 1];
+    const irrf = Math.max(0, baseIR * (faixa.pct / 100) - faixa.ded);
+
+    const totalDescontos = ultimoCalculo.outrosDescontosSemIRRF + irrf;
     const liquido = ultimoCalculo.totalProventos - totalDescontos;
 
     document.getElementById('liquidoValor').textContent = fmt(liquido);
@@ -183,12 +185,12 @@
     const resumoEl = document.getElementById('holLiquidoResumo');
     if (resumoEl) resumoEl.textContent = 'R$ ' + fmt(liquido);
 
-    atualizarIRAcumuladoDisplay();
+    atualizarBaseIRAcumuladaDisplay();
   }
 
-  function atualizarIRAcumuladoDisplay() {
+  function atualizarBaseIRAcumuladaDisplay() {
     const el = document.getElementById('holIRAcumulado');
-    if (el) el.textContent = 'R$ ' + fmt(irAcumuladoAnterior + irrfAtual);
+    if (el) el.textContent = 'R$ ' + fmt(baseIRAcumuladaAnterior + baseIRAtual);
   }
 
   // ---- 13º salário (duas parcelas, não entra no líquido do mês) ----
@@ -201,13 +203,13 @@
   /* =========================================================
      INTERFACE PÚBLICA (usada pelo Controle Financeiro)
      ========================================================= */
-  function setIRAcumuladoAnterior(v) {
-    irAcumuladoAnterior = v || 0;
-    atualizarIRAcumuladoDisplay();
+  function setBaseIRAcumuladaAnterior(v) {
+    baseIRAcumuladaAnterior = v || 0;
+    atualizarBaseIRAcumuladaDisplay();
   }
 
-  function getIRAtual() {
-    return irrfAtual;
+  function getBaseIRAtual() {
+    return baseIRAtual;
   }
 
   /* =========================================================
@@ -300,7 +302,7 @@
 
   window.Holerite = {
     calcular,
-    setIRAcumuladoAnterior,
-    getIRAtual
+    setBaseIRAcumuladaAnterior,
+    getBaseIRAtual
   };
 })();
