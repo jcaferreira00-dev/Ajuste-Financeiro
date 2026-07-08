@@ -435,6 +435,16 @@ function atualizar() {
     document.getElementById("resumoVale").innerText = valorExibicao(totalVale);
     document.getElementById("resumoPagamento").innerText = valorExibicao(totalPagamento);
 
+    // Holerite: informa o IR já acumulado nos meses fechados deste ano, e
+    // mostra no resumo do mês o IR calculado no card do Holerite agora
+    if (typeof Holerite !== "undefined") {
+        let irAcumuladoAnterior = (banco.irAcumulado && banco.irAcumulado.ano === anoAtual)
+            ? banco.irAcumulado.valor
+            : 0;
+        Holerite.setIRAcumuladoAnterior(irAcumuladoAnterior);
+        document.getElementById("resumoIR").innerText = valorExibicao(Holerite.getIRAtual());
+    }
+
     renderReceitas(receitas);
     renderVale(vales);
     renderPagamento(pagamentos);
@@ -729,7 +739,7 @@ function renderHistorico() {
 
     let html = "";
 
-    banco.historico.forEach(h => {
+    banco.historico.forEach((h, index) => {
 
         // Compatibilidade com histórico antigo (texto simples)
         if (typeof h === "string") {
@@ -737,6 +747,50 @@ function renderHistorico() {
             return;
         }
 
+        // Relatório anual (gerado ao fechar dezembro)
+        if (h.tipo === "anual") {
+            let ALTURA_MAX = 90;
+            let max = Math.max(h.entrou, h.saiu, Math.abs(h.sobrou), 1);
+            let altEntrou = h.entrou > 0 ? Math.max(Math.round((h.entrou / max) * ALTURA_MAX), 6) : 0;
+            let altSaiu = h.saiu > 0 ? Math.max(Math.round((h.saiu / max) * ALTURA_MAX), 6) : 0;
+            let altSobrou = h.sobrou !== 0 ? Math.max(Math.round((Math.abs(h.sobrou) / max) * ALTURA_MAX), 6) : 0;
+
+            let ok = h.sobrou >= 0;
+
+            html += `
+<li class="historicoAnual">
+  <div class="historicoTopo">
+    <span class="historicoData">🗓️ Fechamento anual — ${h.ano}</span>
+    <button class="btnExcluirHistorico material-symbols-outlined" title="Excluir" onclick="removerHistorico(${index})">delete</button>
+    <span class="historicoResultado ${ok ? "ok" : "alerta"}">
+      ${ok ? "✅ Ano positivo" : "⚠️ Ano no vermelho"}
+    </span>
+  </div>
+
+  <div class="grafico">
+    <div class="barraColuna">
+      <span class="barraValorV">${valorExibicao(h.entrou)}</span>
+      <div class="barraTrilhoV"><div class="barraPreenchidaV barraReceita" style="height:${altEntrou}px"></div></div>
+      <span class="barraLabelV">Entrou</span>
+    </div>
+    <div class="barraColuna">
+      <span class="barraValorV">${valorExibicao(h.saiu)}</span>
+      <div class="barraTrilhoV"><div class="barraPreenchidaV barraPagamento" style="height:${altSaiu}px"></div></div>
+      <span class="barraLabelV">Saiu</span>
+    </div>
+    <div class="barraColuna">
+      <span class="barraValorV">${valorExibicao(h.sobrou)}</span>
+      <div class="barraTrilhoV"><div class="barraPreenchidaV barraSobrou" style="height:${altSobrou}px"></div></div>
+      <span class="barraLabelV">Sobrou</span>
+    </div>
+  </div>
+
+  <div class="historicoSaldo">IR total do ano (Holerite): <strong>${valorExibicao(h.ir || 0)}</strong></div>
+</li>`;
+            return;
+        }
+
+        // Mês normal
         let ALTURA_MAX = 90;
         let max = Math.max(h.receitas, h.vale, h.pagamento, 1);
         let altReceitas = h.receitas > 0 ? Math.max(Math.round((h.receitas / max) * ALTURA_MAX), 6) : 0;
@@ -749,6 +803,7 @@ function renderHistorico() {
 <li>
   <div class="historicoTopo">
     <span class="historicoData">📅 ${NOMES_MES[Number(h.mes) - 1]}/${h.ano}</span>
+    <button class="btnExcluirHistorico material-symbols-outlined" title="Excluir" onclick="removerHistorico(${index})">delete</button>
     <span class="historicoResultado ${ok ? "ok" : "alerta"}">
       ${ok ? "✅ Deu pra pagar" : "⚠️ Faltou dinheiro"}
     </span>
@@ -773,12 +828,29 @@ function renderHistorico() {
   </div>
 
   <div class="historicoSaldo">Saldo do mês: <strong>${valorExibicao(h.saldo)}</strong></div>
+  ${h.ir ? `<div class="historicoSaldo">IR do mês (Holerite): <strong>${valorExibicao(h.ir)}</strong></div>` : ""}
 </li>`;
     });
 
     document.getElementById("historico").innerHTML = html;
     document.getElementById("vazioHistorico").style.display =
         banco.historico.length === 0 ? "block" : "none";
+}
+
+function removerHistorico(index) {
+    if (!confirm("Excluir este item do histórico? Ele deixa de contar em qualquer cálculo, e essa ação não pode ser desfeita.")) return;
+
+    let item = banco.historico[index];
+
+    // Se for um mês normal do ano que ainda está acumulando IR, tira o IR dele do acumulado
+    if (item && typeof item !== "string" && item.tipo !== "anual" && item.ir
+        && banco.irAcumulado && banco.irAcumulado.ano === item.ano) {
+        banco.irAcumulado.valor = Math.max(0, banco.irAcumulado.valor - item.ir);
+    }
+
+    banco.historico.splice(index, 1);
+    salvarBanco();
+    atualizar();
 }
 
 // =====================================================
@@ -799,14 +871,45 @@ function fecharMes() {
 
     if (!confirmarFechamento(saldo)) return;
 
+    // ---- Holerite: soma o IR deste mês ao acumulado do ano ----
+    let irMes = (typeof Holerite !== "undefined") ? Holerite.getIRAtual() : 0;
+
+    if (!banco.irAcumulado || banco.irAcumulado.ano !== anoAtual) {
+        banco.irAcumulado = { ano: anoAtual, valor: 0 };
+    }
+    banco.irAcumulado.valor += irMes;
+
     banco.historico.unshift({
         mes: mesAtual,
         ano: anoAtual,
         receitas: totalReceitas,
         vale: totalVale,
         pagamento: totalPagamento,
-        saldo: saldo
+        saldo: saldo,
+        ir: irMes
     });
+
+    // ---- Fechou dezembro: gera o relatório anual e reinicia o acumulado de IR ----
+    if (mesAtual === "12") {
+        let entriesDoAno = banco.historico.filter(h =>
+            typeof h !== "string" && h.tipo !== "anual" && h.ano === anoAtual
+        );
+        let entrouAno = entriesDoAno.reduce((a, h) => a + h.receitas, 0);
+        let saiuAno = entriesDoAno.reduce((a, h) => a + h.vale + h.pagamento, 0);
+        let sobrouAno = entrouAno - saiuAno;
+        let irAno = banco.irAcumulado.valor;
+
+        banco.historico.unshift({
+            tipo: "anual",
+            ano: anoAtual,
+            entrou: entrouAno,
+            saiu: saiuAno,
+            sobrou: sobrouAno,
+            ir: irAno
+        });
+
+        banco.irAcumulado = { ano: String(Number(anoAtual) + 1), valor: 0 };
+    }
 
     salvarBanco();
 
@@ -1002,7 +1105,7 @@ if (window.matchMedia) {
 // RECOLHER SEÇÕES (Receitas / Vale / Pagamento)
 // =====================================================
 
-const SECOES_RECOLHIVEIS = ["receitas", "vale", "pagamento", "resumo", "historico"];
+const SECOES_RECOLHIVEIS = ["receitas", "vale", "pagamento", "resumo", "historico", "holerite"];
 
 function aplicarEstadoSecoes() {
     let estados = JSON.parse(localStorage.getItem("secoesRecolhidas") || "{}");

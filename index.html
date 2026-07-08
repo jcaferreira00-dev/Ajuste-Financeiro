@@ -149,24 +149,7 @@
       <p class="listaVazia" id="vazioReceitas">Nenhuma receita neste mês.</p>
     </section>
 
-       <!-- PAGAMENTO -->
-    <section class="card pagamento despesas" data-secao="pagamento">
-      <div class="cardTitulo">
-        <h2>🏦 Pagamento</h2>
-        <span class="totalCard" id="resPagamento">R$ 0,00</span>
-        <button class="btnRecolher" id="btnRecolher_pagamento" onclick="toggleSecao('pagamento')" aria-label="Recolher pagamento">🔽</button>
-      </div>
-
-      <div class="linha">
-        <input id="descricaoPagamento" placeholder="Ex: Aluguel" inputmode="text">
-        <input id="valorPagamento" type="number" step="0.01" inputmode="decimal" placeholder="R$">
-        <button class="btnAdd btnAddPagamento" onclick="adicionarPagamento()" aria-label="Adicionar despesa no pagamento">+</button>
-      </div>
-
-      <ul id="listaPagamento"></ul>
-      <p class="listaVazia" id="vazioPagamento">Nenhuma conta no pagamento este mês.</p>
-    </section>
-     <!-- VALE -->
+    <!-- VALE -->
     <section class="card vale despesas" data-secao="vale">
       <div class="cardTitulo">
         <h2>🎫 Vale</h2>
@@ -184,6 +167,24 @@
       <p class="listaVazia" id="vazioVale">Nenhuma conta no vale este mês.</p>
     </section>
 
+    <!-- PAGAMENTO -->
+    <section class="card pagamento despesas" data-secao="pagamento">
+      <div class="cardTitulo">
+        <h2>🏦 Pagamento</h2>
+        <span class="totalCard" id="resPagamento">R$ 0,00</span>
+        <button class="btnRecolher" id="btnRecolher_pagamento" onclick="toggleSecao('pagamento')" aria-label="Recolher pagamento">🔽</button>
+      </div>
+
+      <div class="linha">
+        <input id="descricaoPagamento" placeholder="Ex: Aluguel" inputmode="text">
+        <input id="valorPagamento" type="number" step="0.01" inputmode="decimal" placeholder="R$">
+        <button class="btnAdd btnAddPagamento" onclick="adicionarPagamento()" aria-label="Adicionar despesa no pagamento">+</button>
+      </div>
+
+      <ul id="listaPagamento"></ul>
+      <p class="listaVazia" id="vazioPagamento">Nenhuma conta no pagamento este mês.</p>
+    </section>
+
     <!-- RESUMO -->
     <section class="card resumo" data-secao="resumo">
       <div class="cardTitulo">
@@ -194,6 +195,7 @@
       <p><span><i class="dot dotReceita"></i>Receitas</span><span id="resumoReceitas">R$ 0,00</span></p>
       <p><span><i class="dot dotVale"></i>Vale</span><span id="resumoVale">R$ 0,00</span></p>
       <p><span><i class="dot dotPagamento"></i>Pagamentos</span><span id="resumoPagamento">R$ 0,00</span></p>
+      <p><span><i class="dot dotIR"></i>IR do mês (Holerite)</span><span id="resumoIR">R$ 0,00</span></p>
 
       <div class="linhaDivisoria"></div>
 
@@ -217,20 +219,203 @@
       <p class="listaVazia" id="vazioHistorico">Nenhum mês fechado ainda.</p>
     </section>
 
-    <!-- FERRAMENTAS (reservado pra futura implementação) -->
-    <section class="card ferramentasSection">
-      <h2>Holerite</h2>
-      <p class="placeholderFerramentas">Em breve, novidades por aqui 🚧</p>
+    <!-- HOLERITE -->
+    <section class="card holeriteSection" data-secao="holerite">
+      <div class="cardTitulo">
+        <h2>🧾 Holerite</h2>
+        <span class="totalCard" id="holLiquidoResumo">R$ 0,00</span>
+        <button class="btnRecolher" id="btnRecolher_holerite" onclick="toggleSecao('holerite')" aria-label="Recolher holerite">🔽</button>
+      </div>
+
+      <div class="holerite-card">
+        <div class="card-label">Salário líquido estimado</div>
+        <div class="card-liquido"><small>R$</small><span id="liquidoValor">0,00</span></div>
+        <div class="card-rows">
+          <div class="card-row">
+            <span><span class="dot prov"></span>Proventos</span>
+            <span class="card-row-value" id="proventosValor">R$ 0,00</span>
+          </div>
+          <div class="card-row">
+            <span><span class="dot desc"></span>Descontos</span>
+            <span class="card-row-value" id="descontosValor">R$ 0,00</span>
+          </div>
+          <div class="card-row">
+            <span>FGTS do mês</span>
+            <span class="card-row-value" id="fgtsValor">R$ 0,00</span>
+          </div>
+          <div class="card-row card-row-editable">
+            <span>Base de cálculo do IR
+              <button type="button" class="reset-btn" id="resetBaseIR" title="Voltar ao valor calculado automaticamente">↺</button>
+            </span>
+            <span class="card-row-input">
+              <small>R$</small>
+              <input type="number" id="baseIRValor" step="0.01" inputmode="decimal">
+            </span>
+          </div>
+          <div class="card-row">
+            <span>13º do ano (2 parcelas)</span>
+            <span class="card-row-value" id="decimoTerceiroTotal">R$ 0,00</span>
+          </div>
+          <div class="card-row">
+            <span>IR acumulado no ano</span>
+            <span class="card-row-value" id="holIRAcumulado">R$ 0,00</span>
+          </div>
+        </div>
+        <button class="btn-primary" id="openModal">✏️ Personalizar cálculo</button>
+      </div>
+
+      <p class="hint">A Base de cálculo do IR vem preenchida automaticamente, mas pode ser editada acima em caso de divergência. Tabelas de IRRF, INSS e demais parâmetros ficam fixos no código.</p>
     </section>
 
   </main>
 
 </div>
 
+<!-- MODAL HOLERITE: Personalizar cálculo -->
+<div class="overlay" id="overlay">
+  <div class="sheet" id="holeriteSheet">
+    <div class="sheet-header">
+      <h2>Personalizar cálculo</h2>
+      <button class="sheet-close" id="closeModal" aria-label="Fechar">✕</button>
+    </div>
+
+    <div class="sheet-body">
+
+      <div class="section-title">📌 Dados fixos do mês</div>
+      <p class="section-note">📌 Campos lembrados de um mês para o outro — clique para editar quando precisar.</p>
+      <div class="field">
+        <label>Salário base (R$) 📌</label>
+        <input type="number" id="salarioBase" step="0.01" placeholder="0,00">
+      </div>
+      <div class="grid2">
+        <div class="field">
+          <label>Dias trabalhados 📌</label>
+          <input type="number" id="diasTrabalhados" step="1" placeholder="30">
+        </div>
+        <div class="field">
+          <label>Dependentes (IR) 📌</label>
+          <input type="number" id="dependentes" step="1" placeholder="0">
+        </div>
+      </div>
+      <div class="field">
+        <label>Domingos/feriados no mês 📌</label>
+        <input type="number" id="domingosFeriados" step="1" placeholder="0">
+      </div>
+
+      <div class="section-title">⏱️ Horas extras e adicionais (do mês)</div>
+      <div class="grid2">
+        <div class="field">
+          <label>HE 50%</label>
+          <input type="number" id="he50" step="0.01" placeholder="0">
+        </div>
+        <div class="field">
+          <label>HE 70% diurna</label>
+          <input type="number" id="he70Diurna" step="0.01" placeholder="0">
+        </div>
+        <div class="field">
+          <label>HE 70% noturna</label>
+          <input type="number" id="he70Noturna" step="0.01" placeholder="0">
+        </div>
+        <div class="field">
+          <label>HE 100% diurna</label>
+          <input type="number" id="he100Diurna" step="0.01" placeholder="0">
+        </div>
+        <div class="field">
+          <label>HE 100% noturna</label>
+          <input type="number" id="he100Noturna" step="0.01" placeholder="0">
+        </div>
+        <div class="field">
+          <label>HE 100% feriado</label>
+          <input type="number" id="he100Feriado" step="0.01" placeholder="0">
+        </div>
+      </div>
+      <div class="field">
+        <label>Horas de adicional noturno (40%)</label>
+        <input type="number" id="horasAdNoturno" step="0.01" placeholder="0">
+      </div>
+
+      <div class="section-title">💊 Descontos do mês</div>
+      <div class="grid2">
+        <div class="field">
+          <label>Odonto (R$) 📌</label>
+          <input type="number" id="odonto" step="0.01" placeholder="0,00">
+        </div>
+        <div class="field">
+          <label>Farmácia (R$)</label>
+          <input type="number" id="farmacia" step="0.01" placeholder="0,00">
+        </div>
+        <div class="field">
+          <label>Despesas médicas (R$)</label>
+          <input type="number" id="despesasMedicas" step="0.01" placeholder="0,00">
+        </div>
+        <div class="field">
+          <label>Refeição (R$) 📌</label>
+          <input type="number" id="refeicao" step="0.01" placeholder="0,00">
+        </div>
+      </div>
+      <div class="field">
+        <label>Vale alimentação (%) 📌</label>
+        <input type="number" id="valeAlimentacaoPct" step="0.01" placeholder="0">
+      </div>
+
+      <div class="section-title">⚙️ Opções do mês</div>
+      <p class="section-note">📌 Adiantamento, previdência e sindicato mantêm o estado marcado de um mês para o outro.</p>
+      <div class="toggle-row">
+        <span>Descontar adiantamento (40% do salário) 📌</span>
+        <label class="switch"><input type="checkbox" id="ativarAdiantamento"><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <span>Descontar previdência privada (VGBL) 📌</span>
+        <label class="switch"><input type="checkbox" id="ativarPrevPrivada"><span class="slider"></span></label>
+      </div>
+      <div class="toggle-row">
+        <span>Descontar mensalidade sindical 📌</span>
+        <label class="switch"><input type="checkbox" id="ativarSindicato"><span class="slider"></span></label>
+      </div>
+      <div class="field" id="sindicatoPctWrap" style="margin-top:10px; display:none;">
+        <label>Mensalidade sindical (%) 📌</label>
+        <input type="number" id="sindicatoPct" step="0.01" placeholder="0">
+      </div>
+
+      <div class="section-title">🎁 13º salário (ano)</div>
+      <p class="section-note">📌 Preencha com o valor líquido recebido em cada parcela. Não entra no líquido do mês — fica só como registro para o fechamento anual.</p>
+      <div class="grid2">
+        <div class="field">
+          <label>1ª parcela (20/nov) 📌</label>
+          <input type="number" id="decimoTerceiroParcela1" step="0.01" placeholder="0,00">
+        </div>
+        <div class="field">
+          <label>2ª parcela (15/dez) 📌</label>
+          <input type="number" id="decimoTerceiroParcela2" step="0.01" placeholder="0,00">
+        </div>
+      </div>
+
+    </div>
+
+    <div class="sheet-footer">
+      <button class="btn-secondary" id="clearForm">Limpar</button>
+      <button class="btn-confirm" id="calcConfirm">Calcular</button>
+    </div>
+  </div>
+</div>
+
+<!-- CONFIRMAÇÃO DE SAÍDA SEM CALCULAR -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <h3>Sair sem calcular?</h3>
+    <p>Você preencheu dados neste mês que ainda não foram calculados. Se sair agora, eles serão perdidos.</p>
+    <div class="confirm-actions">
+      <button class="btn-secondary" id="confirmStay">Continuar editando</button>
+      <button class="btn-danger" id="confirmLeave">Sair mesmo assim</button>
+    </div>
+  </div>
+</div>
+
 <input type="file" id="arquivoBackup" accept="application/json" style="display:none">
 
 <script type="module" src="firebase-sync.js"></script>
 <script src="script.js"></script>
+<script src="holerite.js"></script>
 <script>
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("sw.js").catch(() => {});
