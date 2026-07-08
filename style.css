@@ -1,0 +1,948 @@
+/* =====================================================
+   TOKENS
+===================================================== */
+:root {
+  --verde-musgo: #234d35;
+  --verde-musgo-escuro: #16301f;
+  --verde-menta: #4f9d69;
+  --azul-petroleo: #2b6777;
+  --ocre: #b8860b;
+  --vermelho-terra: #9b3a3a;
+  --amarelo-copa: #ffcd1e;
+  --fundo: #f5f3ee;
+  --card: #ffffff;
+  --texto: #22281f;
+  --texto-suave: #6b7280;
+  --borda: #e7e3da;
+
+  --raio: 18px;
+  --raio-pequeno: 12px;
+  --sombra: 0 4px 14px rgba(27, 58, 41, .08);
+  --sombra-botao: 0 3px 8px rgba(0, 0, 0, .16);
+}
+
+/* =====================================================
+   BASE
+===================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html, body {
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--fundo);
+  color: var(--texto);
+}
+
+body {
+  padding-bottom: calc(24px + env(safe-area-inset-bottom));
+}
+
+button, input, select {
+  font-family: inherit;
+}
+
+#app {
+  max-width: 480px;
+  margin: 0 auto;
+}
+
+main {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* =====================================================
+   CABEÇALHO / SALDO
+===================================================== */
+header {
+  position: relative;
+  padding: calc(14px + env(safe-area-inset-top)) 16px 18px;
+  background: linear-gradient(160deg, var(--verde-musgo) 0%, var(--verde-musgo-escuro) 100%);
+}
+
+.saldo-card {
+  max-width: 448px;
+  margin: 0 auto;
+  color: #fff;
+  text-align: center;
+}
+
+.saldoLabel {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .03em;
+  text-transform: uppercase;
+  opacity: .75;
+  margin-bottom: 4px;
+}
+
+.saldo-card h1 {
+  font-size: 40px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  margin-bottom: 16px;
+}
+
+.saldoNegativo h1 {
+  color: #ffd9d9;
+}
+
+/* Seletor de período (mês/ano) */
+.seletorPeriodo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.setaMes {
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,.12);
+  color: #fff;
+  font-size: 20px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: .15s;
+}
+
+.setaMes:active {
+  background: rgba(255,255,255,.25);
+  transform: scale(.92);
+}
+
+.periodoTextos {
+  display: flex;
+  gap: 6px;
+  background: rgba(255,255,255,.12);
+  border-radius: 999px;
+  padding: 4px;
+}
+
+.periodoTextos select {
+  appearance: none;
+  -webkit-appearance: none;
+  border: none;
+  background: transparent;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  text-align: center;
+  cursor: pointer;
+}
+
+.periodoTextos select:focus {
+  outline: none;
+  background: rgba(255,255,255,.15);
+}
+
+.periodoTextos select option {
+  color: #22281f;
+}
+
+/* =====================================================
+   CARDS
+===================================================== */
+.card {
+  background: var(--card);
+  border-radius: var(--raio);
+  padding: 18px;
+  box-shadow: var(--sombra);
+}
+
+.cardTitulo {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 14px;
+  gap: 10px;
+}
+
+.cardTitulo h2 {
+  flex: 1;
+}
+
+.card > h2 {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.cardTitulo h2 {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.totalCard {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--texto-suave);
+  white-space: nowrap;
+}
+
+/* =====================================================
+   FORMULÁRIO DE LANÇAMENTO
+===================================================== */
+.linha {
+  display: grid;
+  grid-template-columns: 1fr 92px 44px;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.linha input {
+  width: 100%;
+  min-width: 0;
+  padding: 12px 12px;
+  border: 1.5px solid var(--borda);
+  border-radius: var(--raio-pequeno);
+  font-size: 15px;
+  background: #fafaf8;
+}
+
+.linha input:focus {
+  outline: none;
+  border-color: var(--verde-menta);
+  background: #fff;
+}
+
+.btnAdd {
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1;
+  cursor: pointer;
+  box-shadow: var(--sombra-botao);
+  transition: .15s;
+}
+
+.btnAdd:active {
+  transform: scale(.93);
+}
+
+.btnAddReceita { background: var(--verde-menta); }
+.btnAddVale { background: var(--azul-petroleo); }
+.btnAddPagamento { background: var(--ocre); }
+
+/* =====================================================
+   LISTAS DE LANÇAMENTOS
+===================================================== */
+ul {
+  list-style: none;
+}
+
+li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px 4px;
+  border-bottom: 1px solid var(--borda);
+}
+
+li:last-child {
+  border-bottom: none;
+}
+
+.itemInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.itemTitulo {
+  font-weight: 600;
+  font-size: 14.5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.itemValor {
+  font-size: 13.5px;
+  color: var(--texto-suave);
+}
+
+.itemBotoes {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.listaVazia {
+  display: none;
+  font-size: 13.5px;
+  color: var(--texto-suave);
+  text-align: center;
+  padding: 10px 0 2px;
+}
+
+/* =====================================================
+   BOTÕES DE AÇÃO NOS ITENS (círculo branco + sombra)
+===================================================== */
+.btnNormal,
+.btnFixa,
+.btnExcluir,
+.btnEditar,
+.btnPagar,
+.btnPago {
+  width: 34px;
+  height: 34px;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 15px;
+  background: #ffffff;
+  box-shadow: var(--sombra-botao);
+  transition: .15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btnNormal:active,
+.btnFixa:active,
+.btnExcluir:active,
+.btnEditar:active,
+.btnPagar:active,
+.btnPago:active {
+  transform: scale(.9);
+  box-shadow: 0 1px 4px rgba(0,0,0,.18);
+}
+
+/* Estado pago: fundo do item */
+li.pago {
+  background: rgba(79, 157, 105, .06);
+  border-radius: var(--raio-pequeno);
+}
+
+/* =====================================================
+   RESUMO
+===================================================== */
+.resumo p {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 0;
+  font-size: 14.5px;
+}
+
+.resumo p span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--texto-suave);
+}
+
+.dot {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dotReceita { background: var(--verde-menta); }
+.dotVale { background: var(--azul-petroleo); }
+.dotPagamento { background: var(--ocre); }
+
+.linhaDivisoria {
+  height: 1px;
+  background: var(--borda);
+  margin: 8px 0;
+}
+
+.saldoFinal {
+  font-weight: 700;
+  font-size: 17px;
+}
+
+.saldoFinal span:last-child {
+  color: var(--verde-musgo);
+}
+
+/* =====================================================
+   FECHAR MÊS
+===================================================== */
+.fecharMesCard {
+  text-align: center;
+  border: 1.5px solid rgba(255, 205, 30, .4);
+}
+
+.btnFecharMes {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 700;
+  border: 2.5px solid var(--amarelo-copa);
+  border-radius: var(--raio-pequeno);
+  background: var(--verde-musgo);
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(255, 205, 30, .22);
+  transition: .15s;
+}
+
+.btnFecharMes:active {
+  background: var(--verde-musgo-escuro);
+  transform: scale(.98);
+}
+
+.dicaFechar {
+  margin-top: 10px;
+  font-size: 12.5px;
+  color: var(--texto-suave);
+}
+
+/* =====================================================
+   HISTÓRICO
+===================================================== */
+#historico li {
+  display: block;
+  background: #fafaf8;
+  border: 1px solid var(--borda);
+  border-radius: var(--raio-pequeno);
+  margin-bottom: 10px;
+  padding: 14px;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+#historico li:last-child {
+  margin-bottom: 0;
+}
+
+/* Fallback: histórico antigo em texto puro */
+#historico li.historicoTexto {
+  white-space: pre-line;
+}
+
+/* Card estruturado com gráfico */
+.historicoTopo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.historicoData {
+  font-weight: 700;
+  font-size: 14px;
+}
+
+.historicoResultado {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.historicoResultado.ok {
+  background: rgba(79, 157, 105, .15);
+  color: #2e6b46;
+}
+
+.historicoResultado.alerta {
+  background: rgba(155, 58, 58, .13);
+  color: var(--vermelho-terra);
+}
+
+.grafico {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 14px;
+  margin-bottom: 10px;
+  padding-top: 4px;
+}
+
+.barraColuna {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.barraValorV {
+  font-size: 10.5px;
+  font-weight: 700;
+  margin-bottom: 5px;
+  white-space: nowrap;
+}
+
+.barraTrilhoV {
+  width: 26px;
+  height: 90px;
+  background: var(--borda);
+  border-radius: 8px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+
+.barraPreenchidaV {
+  width: 100%;
+  border-radius: 8px;
+  transition: height .4s ease;
+}
+
+.barraReceita { background: var(--verde-menta); }
+.barraVale { background: var(--azul-petroleo); }
+.barraPagamento { background: var(--ocre); }
+
+.barraLabelV {
+  font-size: 11px;
+  color: var(--texto-suave);
+  font-weight: 600;
+  margin-top: 7px;
+}
+
+.historicoSaldo {
+  font-size: 13.5px;
+  font-weight: 600;
+  border-top: 1px solid var(--borda);
+  padding-top: 9px;
+}
+
+.historicoSaldo strong {
+  color: var(--verde-musgo);
+}
+
+/* =====================================================
+   FERRAMENTAS
+===================================================== */
+.botoes {
+  display: flex;
+  gap: 8px;
+}
+
+.btnFerramenta {
+  flex: 1;
+  min-width: 0;
+  padding: 12px 4px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border: 1.5px solid var(--borda);
+  border-radius: var(--raio-pequeno);
+  background: #fafaf8;
+  color: var(--texto);
+  cursor: pointer;
+}
+
+.ferramentaIcone {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 17px;
+  line-height: 1;
+  background: rgba(107, 114, 128, .1);
+}
+
+.btnBackup .ferramentaIcone {
+  background: rgba(43, 103, 119, .12);
+}
+
+.btnRestaurar .ferramentaIcone {
+  background: rgba(184, 134, 11, .12);
+}
+
+.btnExcluirTudo .ferramentaIcone {
+  background: rgba(155, 58, 58, .12);
+}
+
+.ferramentaLabel {
+  font-size: 11.5px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.btnFerramenta:active {
+  background: #efece5;
+}
+
+.btnExcluirTudo {
+  color: var(--vermelho-terra);
+  border-color: rgba(155, 58, 58, .25);
+}
+
+/* =====================================================
+   SALDO POSITIVO / NEGATIVO
+===================================================== */
+.saldoNegativo {
+  color: #ffd9d9;
+}
+
+/* =====================================================
+   LOGIN (dentro de Configurações → Conta)
+===================================================== */
+.contaInfo {
+  font-size: 13px;
+  color: var(--texto-suave);
+  margin-bottom: 12px;
+  line-height: 1.4;
+}
+
+#loginCampos input {
+  width: 100%;
+  padding: 13px 14px;
+  border: 1.5px solid var(--borda);
+  border-radius: var(--raio-pequeno);
+  font-size: 15px;
+  margin-bottom: 10px;
+  background: #fafaf8;
+}
+
+#loginCampos input:focus {
+  outline: none;
+  border-color: var(--verde-menta);
+  background: #fff;
+}
+
+.btnLoginPrimario {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: var(--raio-pequeno);
+  background: var(--verde-musgo);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.btnLoginPrimario:active {
+  background: var(--verde-musgo-escuro);
+}
+
+.btnLoginSecundario {
+  width: 100%;
+  padding: 13px;
+  border: 1.5px solid var(--borda);
+  border-radius: var(--raio-pequeno);
+  background: #fff;
+  color: var(--texto);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 8px;
+}
+
+.loginErro {
+  min-height: 18px;
+  margin-top: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--vermelho-terra);
+}
+
+/* =====================================================
+   BOTÃO SAIR
+===================================================== */
+.btnSair {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  border: none;
+  background: none;
+  color: var(--texto-suave);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* =====================================================
+   TELAS PEQUENAS (iPhone SE / mini)
+===================================================== */
+@media (max-width: 375px) {
+  .saldo-card h1 {
+    font-size: 34px;
+  }
+
+  .linha {
+    grid-template-columns: 1fr 80px 40px;
+  }
+}
+
+/* =====================================================
+   MODO ESCURO
+   Ativado por data-tema="escuro" no <html>, definido via
+   JS (script.js) — automático por padrão, ou manual pelo
+   painel de configurações.
+===================================================== */
+html[data-tema="escuro"] {
+
+  --verde-menta: #5fc789;
+  --azul-petroleo: #3f96b3;
+  --ocre: #d9a53a;
+  --vermelho-terra: #d17a79;
+
+  --fundo: #12151a;
+  --card: #1c2128;
+  --texto: #edf1f0;
+  --texto-suave: #97a1ab;
+  --borda: #2c333c;
+
+  --sombra: 0 4px 14px rgba(0, 0, 0, .35);
+  --sombra-botao: 0 3px 8px rgba(0, 0, 0, .45);
+}
+
+html[data-tema="escuro"] .linha input,
+html[data-tema="escuro"] #loginCampos input {
+  background: #232932;
+  color: var(--texto);
+}
+
+html[data-tema="escuro"] .linha input:focus,
+html[data-tema="escuro"] #loginCampos input:focus {
+  background: #272e38;
+}
+
+html[data-tema="escuro"] .btnNormal,
+html[data-tema="escuro"] .btnFixa,
+html[data-tema="escuro"] .btnExcluir,
+html[data-tema="escuro"] .btnEditar,
+html[data-tema="escuro"] .btnPagar,
+html[data-tema="escuro"] .btnPago {
+  background: var(--card);
+}
+
+html[data-tema="escuro"] #historico li,
+html[data-tema="escuro"] .btnFerramenta {
+  background: #232932;
+}
+
+html[data-tema="escuro"] .btnFerramenta:active {
+  background: #2c333c;
+}
+
+html[data-tema="escuro"] .btnLoginSecundario {
+  background: var(--card);
+  color: var(--texto);
+}
+
+html[data-tema="escuro"] .saldoFinal span:last-child,
+html[data-tema="escuro"] .historicoSaldo strong {
+  color: var(--verde-menta);
+}
+
+/* =====================================================
+   RESPONSIVO — TELAS GRANDES (tablet/computador)
+===================================================== */
+@media (min-width: 860px) {
+
+  #app {
+    max-width: 1100px;
+  }
+
+  main {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-areas:
+      "receitas pagamento vale"
+      "resumo   resumo   fechar"
+      "historico historico historico"
+      "ferramentas ferramentas ferramentas";
+    gap: 18px;
+  }
+
+  .receitas       { grid-area: receitas; }
+  .vale           { grid-area: vale; }
+  .pagamento      { grid-area: pagamento; }
+  .resumo         { grid-area: resumo; }
+  .fecharMesCard  { grid-area: fechar; display: flex; flex-direction: column; justify-content: center; }
+  .historicoSection   { grid-area: historico; }
+  .ferramentasSection { grid-area: ferramentas; }
+
+  .botoes {
+    max-width: 420px;
+  }
+}
+
+/* =====================================================
+   BOTÕES DO CABEÇALHO (olho + configurações)
+===================================================== */
+.acoesTopo {
+  position: absolute;
+  top: calc(14px + env(safe-area-inset-top));
+  right: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.btnOlho,
+.btnConfig {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,.14);
+  color: #fff;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.btnOlho:active,
+.btnConfig:active {
+  background: rgba(255,255,255,.25);
+  transform: scale(.93);
+}
+
+/* =====================================================
+   PAINEL DE CONFIGURAÇÕES
+===================================================== */
+.painelConfig {
+  position: fixed;
+  inset: 0;
+  z-index: 950;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(0,0,0,.45);
+}
+
+.configCard {
+  width: 100%;
+  max-width: 360px;
+  background: var(--card);
+  border-radius: var(--raio);
+  padding: 22px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.3);
+}
+
+.configTopo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.configTopo h2 {
+  font-size: 17px;
+  color: var(--texto);
+}
+
+.btnFecharConfig {
+  width: 30px;
+  height: 30px;
+  border: none;
+  border-radius: 50%;
+  background: var(--borda);
+  color: var(--texto);
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.configLabel {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--texto-suave);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 10px;
+}
+
+.configLabelEspacada {
+  margin-top: 22px;
+}
+
+.painelConfig .botoes {
+  margin-bottom: 4px;
+}
+
+/* =====================================================
+   FERRAMENTAS (espaço reservado)
+===================================================== */
+.placeholderFerramentas {
+  text-align: center;
+  font-size: 13.5px;
+  color: var(--texto-suave);
+  padding: 18px 0 6px;
+}
+
+.temaOpcoes {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btnTema {
+  width: 100%;
+  text-align: left;
+  padding: 13px 14px;
+  border: 1.5px solid var(--borda);
+  border-radius: var(--raio-pequeno);
+  background: transparent;
+  color: var(--texto);
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.btnTema.ativo {
+  border-color: var(--verde-menta);
+  background: rgba(79, 157, 105, .1);
+}
+
+/* =====================================================
+   RECOLHER SEÇÕES (Receitas / Vale / Pagamento)
+===================================================== */
+.btnRecolher {
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: none;
+  color: var(--texto-suave);
+  font-size: 15px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.btnRecolher:active {
+  transform: scale(.88);
+}
+
+.card.recolhido > *:not(.cardTitulo) {
+  display: none;
+}
+
+.card.recolhido .cardTitulo {
+  margin-bottom: 0;
+}
