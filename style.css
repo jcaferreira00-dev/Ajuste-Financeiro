@@ -411,29 +411,16 @@ li.pago {
    entre o card Pagamento e o card Resumo do mês
 ===================================================== */
 .fecharMesFabWrap {
-  position: relative;
-  height: 0;
-  margin: -8px 0;
-  display: flex;
-  justify-content: center;
-  z-index: 6;
-  pointer-events: none;
+  position: relative;       /* mantém o contexto */
+  height: 0;                /* não ocupa espaço */
+  margin: 0;                /* remove margens extras */
 }
 
 .btnFecharMes {
-  pointer-events: auto;
-  width: 58px;
-  height: 58px;
-  border-radius: 50%;
-  border: 2.5px solid var(--azul-petroleo);
-  background: linear-gradient(160deg, var(--verde) 0%, var(--verde-escuro) 100%);
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  box-shadow: 0 6px 18px rgba(13, 74, 36, .38), 0 2px 5px rgba(0, 0, 0, .18);
-  transition: transform .15s ease, box-shadow .15s ease;
+  position: absolute;       /* sobrepõe */
+  top: -30px;               /* sobe o botão acima do espaço */
+  left: 50%;                /* centraliza horizontalmente */
+  transform: translateX(-50%);
 }
 
 .btnFecharMes .material-symbols-outlined {
