@@ -185,13 +185,6 @@
       <p class="listaVazia" id="vazioPagamento">Nenhuma conta no pagamento este mês.</p>
     </section>
 
-    <!-- FECHAR MÊS (flutuante, sobreposto entre Pagamento e Resumo) -->
-    <div class="fecharMesFabWrap">
-      <button class="btnFecharMes" onclick="fecharMes()" aria-label="Fechar mês e avançar" title="Fechar mês e avançar">
-        <span class="material-symbols-outlined">event_available</span>
-      </button>
-    </div>
-
     <!-- RESUMO -->
     <section class="card resumo" data-secao="resumo">
       <div class="cardTitulo">
@@ -207,6 +200,13 @@
 
       <p class="saldoFinal"><span>Saldo</span><span id="saldoResumo">R$ 0,00</span></p>
     </section>
+
+    <!-- FECHAR MÊS (flutuante, sobreposto entre Resumo e Histórico) -->
+    <div class="fecharMesFabWrap">
+      <button class="btnFecharMes" onclick="fecharMes()" aria-label="Fechar mês e avançar" title="Fechar mês e avançar">
+        <span class="material-symbols-outlined">event_available</span>
+      </button>
+    </div>
 
     <!-- HISTÓRICO -->
     <section class="card historicoSection" data-secao="historico">
