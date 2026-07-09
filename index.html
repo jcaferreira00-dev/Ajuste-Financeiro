@@ -136,7 +136,7 @@
       <div class="cardTitulo">
         <h2><span class="material-symbols-outlined card-icon">payments</span>Receitas</h2>
         <span class="totalCard" id="resReceitas">R$ 0,00</span>
-        <button class="btnRecolher" id="btnRecolher_receitas" onclick="toggleSecao('receitas')" aria-label="Recolher receitas">🔽</button>
+        <button class="btnRecolher material-symbols-outlined" id="btnRecolher_receitas" onclick="toggleSecao('receitas')" aria-label="Recolher receitas">expand_more</button>
       </div>
 
       <div class="linha">
@@ -154,7 +154,7 @@
       <div class="cardTitulo">
         <h2><span class="material-symbols-outlined card-icon">receipt_long</span>Vale</h2>
         <span class="totalCard" id="resVale">R$ 0,00</span>
-        <button class="btnRecolher" id="btnRecolher_vale" onclick="toggleSecao('vale')" aria-label="Recolher vale">🔽</button>
+        <button class="btnRecolher material-symbols-outlined" id="btnRecolher_vale" onclick="toggleSecao('vale')" aria-label="Recolher vale">expand_more</button>
       </div>
 
       <div class="linha">
@@ -172,7 +172,7 @@
       <div class="cardTitulo">
         <h2><span class="material-symbols-outlined card-icon">account_balance</span>Pagamento</h2>
         <span class="totalCard" id="resPagamento">R$ 0,00</span>
-        <button class="btnRecolher" id="btnRecolher_pagamento" onclick="toggleSecao('pagamento')" aria-label="Recolher pagamento">🔽</button>
+        <button class="btnRecolher material-symbols-outlined" id="btnRecolher_pagamento" onclick="toggleSecao('pagamento')" aria-label="Recolher pagamento">expand_more</button>
       </div>
 
       <div class="linha">
@@ -185,11 +185,18 @@
       <p class="listaVazia" id="vazioPagamento">Nenhuma conta no pagamento este mês.</p>
     </section>
 
+    <!-- FECHAR MÊS (flutuante, sobreposto entre Pagamento e Resumo) -->
+    <div class="fecharMesFabWrap">
+      <button class="btnFecharMes" onclick="fecharMes()" aria-label="Fechar mês e avançar" title="Fechar mês e avançar">
+        <span class="material-symbols-outlined">event_available</span>
+      </button>
+    </div>
+
     <!-- RESUMO -->
     <section class="card resumo" data-secao="resumo">
       <div class="cardTitulo">
         <h2><span class="material-symbols-outlined card-icon">bar_chart</span>Resumo do mês</h2>
-        <button class="btnRecolher" id="btnRecolher_resumo" onclick="toggleSecao('resumo')" aria-label="Recolher resumo">🔽</button>
+        <button class="btnRecolher material-symbols-outlined" id="btnRecolher_resumo" onclick="toggleSecao('resumo')" aria-label="Recolher resumo">expand_more</button>
       </div>
 
       <p><span><i class="dot dotReceita"></i>Receitas</span><span id="resumoReceitas">R$ 0,00</span></p>
@@ -201,18 +208,11 @@
       <p class="saldoFinal"><span>Saldo</span><span id="saldoResumo">R$ 0,00</span></p>
     </section>
 
-    <!-- FECHAR MÊS (flutuante, sobreposto entre Resumo e Histórico) -->
-    <div class="fecharMesFabWrap">
-      <button class="btnFecharMes" onclick="fecharMes()" aria-label="Fechar mês e avançar" title="Fechar mês e avançar">
-        <span class="material-symbols-outlined">arrow_forward</span>
-      </button>
-    </div>
-
     <!-- HISTÓRICO -->
     <section class="card historicoSection" data-secao="historico">
       <div class="cardTitulo">
         <h2><span class="material-symbols-outlined card-icon">history</span>Histórico</h2>
-        <button class="btnRecolher" id="btnRecolher_historico" onclick="toggleSecao('historico')" aria-label="Recolher histórico">🔽</button>
+        <button class="btnRecolher material-symbols-outlined" id="btnRecolher_historico" onclick="toggleSecao('historico')" aria-label="Recolher histórico">expand_more</button>
       </div>
 
       <ul id="historico"></ul>
@@ -224,7 +224,7 @@
       <div class="cardTitulo">
         <h2><span class="material-symbols-outlined card-icon">request_quote</span>Holerite</h2>
         <span class="totalCard" id="holLiquidoResumo">R$ 0,00</span>
-        <button class="btnRecolher" id="btnRecolher_holerite" onclick="toggleSecao('holerite')" aria-label="Recolher holerite">🔽</button>
+        <button class="btnRecolher material-symbols-outlined" id="btnRecolher_holerite" onclick="toggleSecao('holerite')" aria-label="Recolher holerite">expand_more</button>
       </div>
 
       <div class="holerite-card">

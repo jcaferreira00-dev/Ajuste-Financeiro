@@ -408,7 +408,7 @@ li.pago {
 
 /* =====================================================
    FECHAR MÊS — botão redondo flutuante, sobreposto
-   entre o card Resumo e o card Histórico
+   entre o card Pagamento e o card Resumo do mês
 ===================================================== */
 .fecharMesFabWrap {
   position: relative;
@@ -1394,16 +1394,25 @@ input:checked + .slider::before { transform: translateX(18px); }
   border: none;
   background: none;
   color: var(--texto-suave);
-  font-size: 15px;
+  font-size: 20px;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  transition: transform .2s ease;
 }
 
 .btnRecolher:active {
   transform: scale(.88);
+}
+
+.card.recolhido .btnRecolher {
+  transform: rotate(180deg);
+}
+
+.card.recolhido .btnRecolher:active {
+  transform: rotate(180deg) scale(.88);
 }
 
 .card.recolhido > *:not(.cardTitulo) {
